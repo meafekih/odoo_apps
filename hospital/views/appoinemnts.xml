@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>   
+
+    <record id="hospital_appoinemnts_view_form" model="ir.ui.view">
+        <field name="name">hospital_appoinemnts.view.form</field>
+        <field name="model">hospital.appoinemnts</field>
+        <field name="arch" type="xml">
+            <form>
+                <header> 
+                <!-- options="{'clickable':'1'}" -->
+                    <button string="In consultation" name="action_in_consultation" type="object" states="draft"/>
+                    <button string="Mark as Done" name="action_done" type="object" states="in_consultation" class="oe_highlight"/>
+                    <button string="Cancel" name="action_cancel" type="object" states="draft,in_consultation" data-hotkey='z'/>
+                    <button string="Reset to draft" name="action_draft" type="object" states="cancel"/>
+                    <field name="state" widget="statusbar" nolabel='1'
+                            statusbar_visible="draft,in_consultation,done,cancel"></field>
+                </header>
+
+                <sheet>
+                <div class="oe_title">
+                    <h1>
+                        <field name="priority" widget='priority' class='mr-3'></field>
+                    </h1>
+                </div>
+                    <group string="Informations">
+                        <field name="patient_id"></field>  
+                        <field name="ref"></field> 
+                        <field name="appoinemnt_dt" default_focus="1"></field>
+                        <field name="doctor_id" optional='show' widget='many2one_avatar'></field>
+                    </group>
+                    <group>
+                        <field name="appoinemnt_dt"></field> 
+                        <field name="gender" widget="radio"></field>  
+                        <field name="hide_price_line"></field>
+                        <button string="Object Button" name="object_test" 
+                            confirm="Are you sur to execute python code"
+                            help=" This button write a text bellow" type="object" 
+                            class="oe_highlight"/>
+
+                        <button name="%(hospital.action_hospital_patient)d" 
+                            confirm="Are you sur to open patient ation" 
+                            help=" This button open an patient" string="Action Button" 
+                            type="action" class="oe_highlight" groups="base.group_no_one"/>
+                    </group>
+                    <notebook>
+                        <page name="prescreption" string="Prescreption">
+                            <field name="prescription" placeholder="Enter your prescription"
+                            options="{'resizable':true,'codeview':true}"></field>
+                        
+                        </page>
+                        <page name="pharmacy" string="Pharmacy">
+                            <group name="ph">
+                                <field name="appoinemnt_pharmacy_line_ids">
+                                    <tree editable="top">
+                                        <field name="product_id" string="Product"></field>
+                                        <field name="price" string="Price"
+                                            attrs="{'column_invisible': [('parent.hide_price_line', '=', True)]}"/>
+                                        <field name="qts" string="Quantity"></field>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="product_id" string="Product"></field>
+                                            <field name="price" string="Price"
+                                                attrs="{'column_invisible': [('parent.hide_price_line', '=', True)]}"/>
+                                            <field name="qts" string="Quantity"></field>
+                                        </group>
+                                    </form>                                
+                                </field>
+                            </group>                     
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hospital_appoinemnts_view_tree" model="ir.ui.view">
+        <field name="name">hospital_appoinemnts.view.tree</field>
+        <field name="model">hospital.appoinemnts</field>
+        <field name="arch" type="xml">
+            <tree string="Tree" edit='1' create='1' delete='1' multi_edit="1"
+                decoration-success="state=='done'" 
+                decoration-danger="state== 'cancel'">  
+                <field name="patient_id"></field> 
+                <field name="ref" optional='show'></field> 
+                <field name="gender" optional='show'></field> 
+                <field name="doctor_id" optional='show' widget='many2one_avatar_user'></field>
+                <field name="appoinemnt_dt" optional='show'></field>
+                <field name="activity_ids" widget='list_activity' optional='hide'></field>
+                <field name="priority" widget='priority' optional='hide'></field>  
+                <field name="state" widget="badge" optional='show'
+                        decoration-info="state=='draft'" 
+                        decoration-warning="state=='in_consultation'" 
+                        decoration-success="state=='done'" 
+                        decoration-danger="state== 'cancel'">
+                        </field> 
+            </tree>
+        </field>
+    </record>
+
+    <record id="hospital_appoinemnts_view_activity" model="ir.ui.view">
+        <field name="name">hospital_appoinemnts.view.activity</field>
+        <field name="model">hospital.appoinemnts</field>
+        <field name="arch" type="xml">
+            <activity string="Appoinments">
+                <field name="patient_id"></field>
+                <field name="ref"></field>
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="patient_id"></field>
+                        <field name="ref"></field>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    
+
+    
+
+</odoo> 
